@@ -135,13 +135,17 @@ class _DateItem extends StatelessWidget {
 
   /* Handler pressed */
   void _onPressed() {
-    _dateSubject.add(date);
-    onDatePressed(date);
+    if (onDatePressed != null) {
+      _dateSubject.add(date);
+      onDatePressed(date);
+    }
   }
 
   /* Handler long pressed */
   void _onLongPressed() {
-    _dateSubject.add(date);
-    onDateLongPressed(date);
+    if (onDateLongPressed != null) {
+      _dateSubject.add(date);
+      onDateLongPressed(date);
+    }
   }
 }

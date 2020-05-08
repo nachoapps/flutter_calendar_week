@@ -1,18 +1,14 @@
 // ignore: must_be_immutable
-import 'package:flutter/material.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:flutter_calendar_week/model/decoration_item.dart';
 import 'package:dartz/dartz.dart' as dartz;
-
-part 'model/week_item.dart';
-
-part 'utils/split_to_week.dart';
-
-part 'utils/compare_date.dart';
-
-part 'date_item.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_calendar_week/model/decoration_item.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'common.dart';
+part 'date_item.dart';
+part 'model/week_item.dart';
+part 'utils/compare_date.dart';
+part 'utils/split_to_week.dart';
 
 // ignore: must_be_immutable
 class CalendarWeek extends StatefulWidget {
@@ -21,6 +17,9 @@ class CalendarWeek extends StatefulWidget {
 
   /* Calendar end at `maxDate` */
   final DateTime maxDate;
+
+  /* Controls the number of days displayed, defaults to 7 for a standard week */
+  final int weekSize;
 
   /* TextStyle of day of week */
   TextStyle dayOfWeekStyle;
@@ -77,18 +76,15 @@ class CalendarWeek extends StatefulWidget {
       {@required this.maxDate,
       @required this.minDate,
       this.height = 80,
-      this.dayOfWeekStyle =
-          const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
+      this.weekSize = 7,
+      this.dayOfWeekStyle = const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
       this.dayOfWeekAlignment = FractionalOffset.bottomCenter,
-      this.dateStyle =
-          const TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
+      this.dateStyle = const TextStyle(color: Colors.blue, fontWeight: FontWeight.w400),
       this.dateAlignment = FractionalOffset.topCenter,
-      this.todayDateStyle =
-          const TextStyle(color: Colors.orange, fontWeight: FontWeight.w400),
+      this.todayDateStyle = const TextStyle(color: Colors.orange, fontWeight: FontWeight.w400),
       this.todayBackgroundColor = Colors.black12,
       this.pressedDateBackgroundColor = Colors.blue,
-      this.pressedDateStyle =
-          const TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
+      this.pressedDateStyle = const TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
       this.dateBackgroundColor = Colors.transparent,
       this.onDatePressed,
       this.onDateLongPressed,
@@ -121,8 +117,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
   void initState() {
     super.initState();
     /*  Read from minDate to madDate and split to weeks */
-    final toWeek =
-        _splitToWeek(widget.minDate, widget.maxDate, widget.dayOfWeek);
+    final toWeek = _splitToWeek(widget.minDate, widget.maxDate, widget.dayOfWeek, widget.weekSize);
     weeks.addAll(toWeek.value1);
 
     /*
@@ -211,9 +206,7 @@ class _CalendarWeekState extends State<CalendarWeek> {
   /* Date item layout */
   Widget _dateItem(DateTime date) => _DateItem(
         date: date,
-        dateStyle: _compareDate(date, _today)
-            ? widget.todayDateStyle
-            : widget.dateStyle,
+        dateStyle: _compareDate(date, _today) ? widget.todayDateStyle : widget.dateStyle,
         pressedDateStyle: widget.pressedDateStyle,
         backgroundColor: widget.dateBackgroundColor,
         todayBackgroundColor: widget.todayBackgroundColor,
@@ -221,9 +214,8 @@ class _CalendarWeekState extends State<CalendarWeek> {
         decorationAlignment: () {
           /* If date is contain in decorations list, use decorations Alignment */
           if (widget.decorations.isNotEmpty) {
-            final List<DecorationItem> matchDate = widget.decorations
-                .where((ele) => _compareDate(ele.date, date))
-                .toList();
+            final List<DecorationItem> matchDate =
+                widget.decorations.where((ele) => _compareDate(ele.date, date)).toList();
             return matchDate.isNotEmpty
                 ? matchDate[0].decorationAlignment
                 : FractionalOffset.center;
@@ -236,9 +228,8 @@ class _CalendarWeekState extends State<CalendarWeek> {
         decoration: () {
           /* If date is contain in decorations list, use decorations Widget */
           if (widget.decorations.isNotEmpty) {
-            final List<DecorationItem> matchDate = widget.decorations
-                .where((ele) => _compareDate(ele.date, date))
-                .toList();
+            final List<DecorationItem> matchDate =
+                widget.decorations.where((ele) => _compareDate(ele.date, date)).toList();
             return matchDate.isNotEmpty ? matchDate[0].decoration : null;
           }
           return null;

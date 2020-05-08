@@ -1,11 +1,11 @@
 part of '../calendar_week.dart';
 
 /*
-  Read from minDate to madDate and split to weeks.
+  Read from minDate to madDate and split to weeks of size weekSize.
   Return List contain weeks and index of week item content today.
 */
 dartz.Tuple2<List<_WeekItem>, int> _splitToWeek(
-    DateTime minDate, DateTime maxDate, List<String> dayOfWeek) {
+    DateTime minDate, DateTime maxDate, List<String> dayOfWeek, int weekSize) {
   /* Count until length day of week */
   int count = 1;
   /* List contain day Of Week */
@@ -17,20 +17,13 @@ dartz.Tuple2<List<_WeekItem>, int> _splitToWeek(
   /* index of week item contain today */
   int thisWeek = 0;
   /* clone minDate object */
-  DateTime minDateCloned = DateTime(
-      minDate.year,
-      minDate.month,
-      minDate.day,
-      minDate.hour,
-      minDate.minute,
-      minDate.second,
-      minDate.millisecond,
-      minDate.microsecond);
+  DateTime minDateCloned = DateTime(minDate.year, minDate.month, minDate.day, minDate.hour,
+      minDate.minute, minDate.second, minDate.millisecond, minDate.microsecond);
 
   /* Read from minDate to madDate */
   while (minDateCloned.compareTo(maxDate) < 1) {
     /* If in week */
-    if (count < _maxDayOfWeek) {
+    if (count < weekSize) {
       /* Add day of week to list day of week */
       _dayOfWeek.add(dayOfWeek[minDateCloned.weekday - 1]);
       /* Add day of week to list days */
@@ -42,7 +35,7 @@ dartz.Tuple2<List<_WeekItem>, int> _splitToWeek(
       count++;
     }
     /* If is last day of week, add list list day of week and list day to a week. then add the week to list weeks */
-    else if (count == _maxDayOfWeek) {
+    else if (count == weekSize) {
       /* Reset count */
       count = 1;
       /* Add last day of week to list day of week */
@@ -50,8 +43,7 @@ dartz.Tuple2<List<_WeekItem>, int> _splitToWeek(
       /* Add last day to list days */
       _days.add(minDateCloned);
       /* Add the week to list week */
-      _weeks.add(
-          _WeekItem(dayOfWeek: List.from(_dayOfWeek), days: List.from(_days)));
+      _weeks.add(_WeekItem(dayOfWeek: List.from(_dayOfWeek), days: List.from(_days)));
       /* clear list before add new item */
       _dayOfWeek.clear();
       _days.clear();
@@ -67,16 +59,14 @@ dartz.Tuple2<List<_WeekItem>, int> _splitToWeek(
 
   // if while about is not end with last day of week, add add items less
   if (count > 1) {
-    _weeks.add(
-        _WeekItem(dayOfWeek: List.from(_dayOfWeek), days: List.from(_days)));
+    _weeks.add(_WeekItem(dayOfWeek: List.from(_dayOfWeek), days: List.from(_days)));
     _dayOfWeek.clear();
     _days.clear();
   }
 
   /* Fit day to list week */
-  if (_weeks.isNotEmpty &&
-      _weeks[_weeks.length - 1].dayOfWeek.length < _maxDayOfWeek) {
-    for (int i = 0; i < _maxDayOfWeek; i++) {
+  if (_weeks.isNotEmpty && _weeks[_weeks.length - 1].dayOfWeek.length < weekSize) {
+    for (int i = 0; i < weekSize; i++) {
       if (i > _weeks[_weeks.length - 1].dayOfWeek.length - 1) {
         _weeks[_weeks.length - 1].dayOfWeek.add(dayOfWeek[i]);
         _weeks[_weeks.length - 1].days.add(null);
