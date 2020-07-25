@@ -4,7 +4,7 @@ part of '../calendar_week.dart';
   Read from minDate to madDate and split to weeks of size weekSize.
   Return List contain weeks and index of week item content today.
 */
-dartz.Tuple2<List<_WeekItem>, int> _splitToWeek(
+Tuple2<List<_WeekItem>, int> _splitToWeek(
     DateTime minDate, DateTime maxDate, List<String> dayOfWeek, int weekSize) {
   /* Count until length day of week */
   int count = 1;
@@ -74,5 +74,5 @@ dartz.Tuple2<List<_WeekItem>, int> _splitToWeek(
     }
   }
 
-  return dartz.Tuple2<List<_WeekItem>, int>(_weeks, thisWeek);
+  return Tuple2<List<_WeekItem>, int>(_weeks, thisWeek);
 }
