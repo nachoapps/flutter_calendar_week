@@ -1,5 +1,4 @@
 // ignore: must_be_immutable
-import 'package:dartz/dartz.dart' as dartz;
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_week/model/decoration_item.dart';
 import 'package:flutter_calendar_week/utils/tuples.dart';
